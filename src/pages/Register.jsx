@@ -12,18 +12,18 @@ export default function Register() {
 
   async function handleSubmit() {
     setError('')
-    // if (!form.name || !form.email || !form.password || !form.confirm) {
-    //   setError('Please fill in all fields')
-    //   return
-    // }
-    // if (form.password !== form.confirm) {
-    //   setError('Passwords do not match')
-    //   return
-    // }
-    // if (form.password.length < 6) {
-    //   setError('Password must be at least 6 characters')
-    //   return
-    // }
+    if (!form.name || !form.email || !form.password || !form.confirm) {
+      setError('Please fill in all fields')
+      return
+    }
+    if (form.password !== form.confirm) {
+      setError('Passwords do not match')
+      return
+    }
+    if (form.password.length < 6) {
+      setError('Password must be at least 6 characters')
+      return
+    }
     setLoading(true)
     try {
       await register(form.name, form.email, form.password)

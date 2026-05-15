@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback } from 'react'
 
 const AuthContext = createContext(null)
 
@@ -8,6 +8,12 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(localStorage.getItem('mindspace_token'))
   const [loading, setLoading] = useState(true)
+
+  const logout = useCallback(() => {
+    localStorage.removeItem('mindspace_token')
+    setToken(null)
+    setUser(null)
+  }, [])
 
   useEffect(() => {
     if (token) {
@@ -24,7 +30,7 @@ export function AuthProvider({ children }) {
     } else {
       setLoading(false)
     }
-  }, [])
+  }, [logout])
 
   async function register(name, email, password) {
     const res = await fetch(`${API}/auth/register`, {
@@ -50,12 +56,6 @@ export function AuthProvider({ children }) {
     localStorage.setItem('mindspace_token', data.token)
     setToken(data.token)
     setUser(data.user)
-  }
-
-  function logout() {
-    localStorage.removeItem('mindspace_token')
-    setToken(null)
-    setUser(null)
   }
 
   return (

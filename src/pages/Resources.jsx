@@ -61,20 +61,20 @@ function BreathingExercise({ exercise }) {
     if (!running) return
     intervalRef.current = setInterval(() => {
       setCountdown(prev => {
-        if (prev <= 1) {
-          setPhaseIdx(pi => {
-            const next = (pi + 1) % exercise.phases.length
-            if (next === 0) setCycles(c => c + 1)
-            setCountdown(exercise.phases[next].duration)
-            return next
-          })
-          return exercise.phases[(phaseIdx + 1) % exercise.phases.length].duration
-        }
+        if (prev <= 1) return -1  // signal phase transition
         return prev - 1
       })
     }, 1000)
     return () => clearInterval(intervalRef.current)
   }, [running, phaseIdx])
+
+  useEffect(() => {
+    if (countdown !== -1) return
+    const next = (phaseIdx + 1) % exercise.phases.length
+    if (next === 0) setCycles(c => c + 1)
+    setPhaseIdx(next)
+    setCountdown(exercise.phases[next].duration)
+  }, [countdown])
 
   function toggle() {
     if (running) {

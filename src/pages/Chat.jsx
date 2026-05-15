@@ -65,9 +65,9 @@ export default function Chat() {
     setLoading(true)
 
     try {
-      // Build conversation history for context
+      // Build conversation history for context (skip the initial greeting)
       const history = messages
-        .filter(m => m.role !== 'assistant' || m !== messages[0])
+        .slice(1)
         .map(m => ({
           role: m.role === 'user' ? 'user' : 'model',
           parts: [{ text: m.text }]
