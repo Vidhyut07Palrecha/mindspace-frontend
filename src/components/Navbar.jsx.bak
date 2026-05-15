@@ -1,0 +1,68 @@
+import { Link, useLocation } from 'react-router-dom'
+import { MessageCircle, BarChart2, BookHeart, Home } from 'lucide-react'
+
+const links = [
+  { to: '/', label: 'Home', icon: Home },
+  { to: '/chat', label: 'Chat', icon: MessageCircle },
+  { to: '/mood', label: 'Mood', icon: BarChart2 },
+  { to: '/resources', label: 'Resources', icon: BookHeart },
+]
+
+export default function Navbar() {
+  const { pathname } = useLocation()
+
+  return (
+    <nav style={{
+      position: 'sticky', top: 0, zIndex: 100,
+      background: 'rgba(8,12,20,0.85)',
+      backdropFilter: 'blur(20px)',
+      borderBottom: '1px solid var(--border)',
+      padding: '0 2rem',
+    }}>
+      <div style={{
+        maxWidth: 1100, margin: '0 auto',
+        display: 'flex', alignItems: 'center',
+        justifyContent: 'space-between',
+        height: 64,
+      }}>
+        {/* Logo */}
+        <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{
+            width: 34, height: 34, borderRadius: 10,
+            background: 'linear-gradient(135deg, var(--accent2), var(--accent))',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 16,
+          }}>🧠</div>
+          <span style={{
+            fontFamily: 'Syne, sans-serif',
+            fontWeight: 700, fontSize: 18,
+            color: 'var(--text)',
+            letterSpacing: '-0.02em',
+          }}>MindSpace</span>
+        </Link>
+
+        {/* Links */}
+        <div style={{ display: 'flex', gap: 4 }}>
+          {links.map(({ to, label, icon: Icon }) => {
+            const active = pathname === to
+            return (
+              <Link key={to} to={to} style={{
+                textDecoration: 'none',
+                display: 'flex', alignItems: 'center', gap: 6,
+                padding: '7px 14px', borderRadius: 10,
+                fontSize: 14, fontWeight: 500,
+                color: active ? 'var(--text)' : 'var(--text2)',
+                background: active ? 'var(--card2)' : 'transparent',
+                border: active ? '1px solid var(--border2)' : '1px solid transparent',
+                transition: 'all 0.2s',
+              }}>
+                <Icon size={15} />
+                {label}
+              </Link>
+            )
+          })}
+        </div>
+      </div>
+    </nav>
+  )
+}
