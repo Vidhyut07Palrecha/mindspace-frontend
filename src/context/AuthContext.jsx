@@ -32,18 +32,46 @@ export function AuthProvider({ children }) {
     }
   }, [logout])
 
-  async function register(name, email, password) {
+ async function register(name, email, password) {
+  try {
+    console.log("Sending register request:", {
+      name,
+      email,
+      password
+    })
+
     const res = await fetch(`${API}/auth/register`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, password })
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        password
+      })
     })
+
+    console.log("Response status:", res.status)
+
     const data = await res.json()
-    if (!res.ok) throw new Error(data.message)
+
+    console.log("Response data:", data)
+
+    if (!res.ok) {
+      throw new Error(data.message || 'Registration failed')
+    }
+
     localStorage.setItem('mindspace_token', data.token)
+
     setToken(data.token)
     setUser(data.user)
+
+  } catch (err) {
+    console.error("REGISTER ERROR:", err)
+    throw err
   }
+}
 
   async function login(email, password) {
     const res = await fetch(`${API}/auth/login`, {
